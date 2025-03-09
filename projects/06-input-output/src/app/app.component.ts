@@ -1,42 +1,41 @@
 import { Component } from '@angular/core';
 import { Car } from './car';
+import { ListingComponent } from './listing/listing.component';
 
+/**
+ * 
+ * Property binding in Angular enables you to set values for properties of elements in your templates. This allows dynamic values
+ * <button type="button" [disabled]="isDisabled">Save</button>
+ * 
+ * Event binding in Angular enables you to respond to events in the template
+ * <button type="buton" (click)="handleClick()">Save</button>
+ * 
+ * Inputs in Angular is just like props. So you can use them to pass data between templates.
+ * @component({
+ *  // other declarative stuff
+ *  template: `app-user-card [userData]="user"/>`
+ * 
+ *  export class AppComponent {
+ *  user = {name: "name", value: "value"}
+ * }
+ * })
+ * 
+ * Inputs allow us to send information into the component. Outputs allows us to send information out. Both are about communication
+ * 
+ */
 @Component({
   selector: 'app-root',
   standalone: true,
   template: `
     <h1>Saved Cars {{ savedCarList.length }}</h1>
     <section class="container">
-      <!-- This article element represents and entire listing -->
-      <article class="listing">
-        <div class="image-parent">
-          <img class="product-image" src="https://placehold.co/100x100" />
-        </div>
-        <section class="details">
-          <p class="title"><!-- car make and model--></p>
-          <hr />
-          <p class="detail">
-            <span>Year</span>
-            <span><!-- year --></span>
-          </p>
-          <div class="detail">
-            <span>Transmission</span>
-            <span><!-- transmission --></span>
-          </div>
-          <p class="detail">
-            <span>Mileage</span>
-            <span><!-- miles --></span>
-          </p>
-          <p class="detail">
-            <span>Price</span>
-            <span><!-- price --></span>
-          </p>
-        </section>
-      </article>
-      <!-- end car listing markup -->
+      @for(car of carList; track car) {
+        <app-listing [car]="car" (savedCar)="handleSaveCar($event)"></app-listing>
+      }
     </section>
   `,
   styles: [],
+  imports: [ListingComponent],
 })
 export class AppComponent {
   savedCarList: Car[] = [];
@@ -74,4 +73,8 @@ export class AppComponent {
       transmission: 'Automatic',
     },
   ];
+
+  handleSaveCar(car: Car) {
+    this.savedCarList.push(car);
+  }
 }
